@@ -1,0 +1,44 @@
+default_install_hook_types: [pre-commit, commit-msg, pre-push]
+default_stages: [pre-commit]
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=no]
+      - id: check-yaml
+      - id: check-toml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.10
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.19.1
+    hooks:
+      - id: commitizen
+
+  - repo: local
+    hooks:
+      - id: pyright
+        name: pyright
+        entry: venv/bin/pyright
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: pytest
+        name: pytest
+        entry: venv/bin/python -m pytest -q
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]

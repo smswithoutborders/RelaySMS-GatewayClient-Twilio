@@ -1,0 +1,27 @@
+[Unit]
+Description=RelaySMS Gateway Client for Twilio
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+User=relaysms
+WorkingDirectory=/opt/relaysms/relaysms-gatewayclient-twilio
+EnvironmentFile=/opt/relaysms/relaysms-gatewayclient-twilio/.env
+ExecStart=/opt/relaysms/relaysms-gatewayclient-twilio/venv/bin/python3 -m uvicorn gateway_client.app:app --host "${HOST}" --port "${PORT}" --proxy-headers
+Restart=on-failure
+RestartSec=5
+SyslogIdentifier=relaysms-gatewayclient-twilio
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

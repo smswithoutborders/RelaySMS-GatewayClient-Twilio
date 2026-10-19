@@ -1,0 +1,5 @@
+fastapi[standard]==0.142.2
+httpx==0.28.1
+phonenumbers==9.0.40
+pydantic-settings==2.16.0
+twilio==9.11.2

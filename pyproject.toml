@@ -1,0 +1,41 @@
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+preview = true
+explicit-preview-rules = true
+select = [
+  "E",
+  "F",
+  "I",
+  "B",
+  "UP",
+  "SIM",
+  "N",
+  "RUF",
+  "LOG",
+  "G",
+  "PLR6301",
+]
+
+[tool.pyright]
+typeCheckingMode = "basic"
+pythonVersion = "3.12"
+venvPath = "."
+venv = "venv"
+exclude = ["venv", "**/__pycache__"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["gateway_client"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true
+skip_covered = true
+
+[tool.commitizen]
+name = "cz_conventional_commits"
