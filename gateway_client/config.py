@@ -21,6 +21,8 @@ class Settings(BaseSettings):
         env_file=None if os.environ.get("LOAD_DOTENV") == "false" else ROOT / ".env",
         # A blank value, as template.env has, counts as unset.
         env_ignore_empty=True,
+        # .env also holds HOST and PORT, which uvicorn reads.
+        extra="ignore",
         # Keeps a mistyped secret out of the startup error.
         hide_input_in_errors=True,
     )

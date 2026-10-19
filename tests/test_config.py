@@ -66,6 +66,15 @@ def test_the_timeout_must_be_positive(monkeypatch):
     assert "forward_timeout" in _errors()
 
 
+def test_an_env_file_with_server_settings_loads(tmp_path):
+    env_file = tmp_path / ".env"
+    env_file.write_text("HOST=127.0.0.1\nPORT=16100\nLOG_LEVEL=DEBUG\n")
+
+    settings = Settings(_env_file=env_file)  # pyright: ignore[reportCallIssue]
+
+    assert settings.log_level == "DEBUG"
+
+
 def test_secrets_stay_out_of_repr():
     text = repr(_load())
 
