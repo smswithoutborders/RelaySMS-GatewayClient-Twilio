@@ -52,28 +52,28 @@ From=%2B237670000000&Body=<text>&MessageSid=...
 
 ## Install
 
-As root, Python 3.12+:
+Python 3.12+, as a user with `sudo`:
 
 - Clone:
 
   ```bash
-  git clone https://github.com/smswithoutborders/RelaySMS-GatewayClient-Twilio.git /opt/relaysms/relaysms-gatewayclient-twilio
+  sudo git clone https://github.com/smswithoutborders/RelaySMS-GatewayClient-Twilio.git /opt/relaysms/relaysms-gatewayclient-twilio
   cd /opt/relaysms/relaysms-gatewayclient-twilio
   ```
 
 - Install:
 
   ```bash
-  python3 -m venv venv && venv/bin/pip install -r requirements.txt
+  sudo python3 -m venv venv && sudo venv/bin/pip install -r requirements.txt
   ```
 
 - Configure (variables in [template.env](template.env)):
 
   ```bash
-  id relaysms || useradd --system --no-create-home relaysms
-  sed "s/^SENDER_HASH_KEY=$/SENDER_HASH_KEY=$(openssl rand -hex 32)/" template.env >.env
-  vim .env
-  chown root:relaysms .env && chmod 640 .env
+  id relaysms || sudo useradd --system --no-create-home relaysms
+  sudo install -m 640 -o root -g relaysms /dev/null .env
+  sed "s/^SENDER_HASH_KEY=$/SENDER_HASH_KEY=$(openssl rand -hex 32)/" template.env | sudo tee .env >/dev/null
+  sudo vim .env
   ```
 
 > [!IMPORTANT]
@@ -82,14 +82,14 @@ As root, Python 3.12+:
 - Start:
 
   ```bash
-  cp deploy/relaysms-gatewayclient-twilio.service /etc/systemd/system/
-  systemctl daemon-reload && systemctl enable --now relaysms-gatewayclient-twilio
+  sudo cp deploy/relaysms-gatewayclient-twilio.service /etc/systemd/system/
+  sudo systemctl daemon-reload && sudo systemctl enable --now relaysms-gatewayclient-twilio
   ```
 
 - Check (startup fails listing any invalid setting):
 
   ```bash
-  journalctl -u relaysms-gatewayclient-twilio
+  sudo journalctl -u relaysms-gatewayclient-twilio
   ```
 
 ### nginx
@@ -97,7 +97,7 @@ As root, Python 3.12+:
 > [!IMPORTANT]
 > Twilio signs the exact URL it calls. nginx must pass the original `Host` and scheme, and the URL in Twilio's console must match the one nginx serves.
 
-- Save as `/etc/nginx/sites-available/<domain>.conf`:
+- Save as `/etc/nginx/sites-available/<domain>.conf` (`sudo vim` it):
 
   ```nginx
   server {
@@ -119,9 +119,9 @@ As root, Python 3.12+:
 - Enable and add HTTPS:
 
   ```bash
-  ln -s /etc/nginx/sites-available/<domain>.conf /etc/nginx/sites-enabled/
-  nginx -t && systemctl reload nginx
-  certbot --nginx -d <domain>
+  sudo ln -s /etc/nginx/sites-available/<domain>.conf /etc/nginx/sites-enabled/
+  sudo nginx -t && sudo systemctl reload nginx
+  sudo certbot --nginx -d <domain>
   ```
 
 ### Twilio
